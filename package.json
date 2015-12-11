@@ -19,6 +19,7 @@
     "underscore": "^1.8.3",
     "jshint": "^2.8.0",
     "bower": "^1.5.3",
-    "elasticsearch": "~10.0.1"
+    "elasticsearch": "~10.0.1",
+    "mongodb": "~2.1.0"
   }
 }
