@@ -1,25 +1,37 @@
 {
-  "name": "nosql",
-  "description": "no SQL Team Joshua Vecsei und Jonas Weber",
-  "version": "0.0.1",
-  "license": "MIT",
-  "author": "Jonas Weber <weber.jonas@gmail.com>",
-  "contributors": [
+    "name": "nosql",
+    "description": "no SQL Team Joshua Vecsei und Jonas Weber",
+    "version": "0.0.1",
+    "license": "MIT",
+    "author": "Jonas Weber <weber.jonas@gmail.com>",
+    "contributors": [
     "Jonas Weber <weber.jonas@gmail.com>",
     "Joshua Vecsei <>"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ajaguar/noSQL_Team_VW.git"
-  },
-  "bugs": "https://github.com/ajaguar/noSQL_Team_VW/issues",
-  "scripts": {},
-  "dependencies": {
-    "express": "^4.13.3",
-    "underscore": "^1.8.3",
-    "jshint": "^2.8.0",
-    "bower": "^1.5.3",
-    "elasticsearch": "~10.0.1",
-    "mongodb": "~2.1.0"
-  }
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ajaguar/noSQL_Team_VW.git"
+    },
+    "bugs": "https://github.com/ajaguar/noSQL_Team_VW/issues",
+    "scripts": {
+        "start": "node server/index",
+        "dev": "nodemon server/index"
+    },
+    "dependencies": {
+        "express": "^4.13.3",
+        "underscore": "^1.8.3",
+        "jshint": "^2.8.0",
+        "bower": "^1.5.3",
+        "elasticsearch": "~10.0.1",
+        "mongodb": "~2.1.0"
+    },
+    "config": {
+        "server:port": "8888",
+        "build:target": "./lib",
+        "build:src": "./src",
+        "build:assets": "./src/client"
+    },
+    "devDependencies": {
+        "nodemon": "~1.8.1"
+    }
 }

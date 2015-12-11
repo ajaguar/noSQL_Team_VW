@@ -3,12 +3,13 @@
 var express = require('express');
 var app = express();
 
-// serve files from ../client as static content
-app.use(express.static('/client'));
-// serve files from ../../bower_components as static content at /bower_components
-//app.use('/bower_components', express.static('../../bower_components'));
+//app.get('/', function (req, res) {
+//  res.send('Hello World!');
+//});
+app.use(express.static(__dirname + '/../client'));
 
-var server = app.listen(3000, function () {
+
+var server = app.listen(process.env.npm_package_config_server_port || 3000, function () {
   var host = server.address().address;
   var port = server.address().port;
 
