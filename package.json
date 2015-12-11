@@ -1,0 +1,39 @@
+{
+  "name": "noSQL Team VW",
+  "description": "no SQL Team Joshua Vecsei und Jonas Weber",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": "Jonas Weber <weber.jonas@gmail.com>",
+  "contributors": [
+    "Jonas Weber <weber.jonas@gmail.com>",
+    "Joshua Vecsei <>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ajaguar/noSQL_Team_VW.git"
+  },
+  "bugs": "https://github.com/ajaguar/noSQL_Team_VW/issues",
+  "scripts": {
+
+  },
+  "bin": {
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "underscore": "^1.8.3",
+    "jshint": "^2.8.0",
+    "bower": "^1.5.3"
+  },
+  "devDependencies": {
+  },
+  "config": {
+   // "server:port": "8888",
+
+  //  "db:name": "",
+  //  "db:user": "",
+  //  "db:pass": "",
+  //  "db:host": "",
+  //  "db:dialect": "",
+  //  "db:storage": "."
+  }
+}
