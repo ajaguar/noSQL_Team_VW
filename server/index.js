@@ -1,15 +1,16 @@
 'use strict';
 
 var express = require('express');
+var config = require("../config");
 var fs = require("fs");
 var multer = require("multer");
 var elasticsearch = require('elasticsearch');
 var app = express();
 var upload = multer({
-    dest: 'uploads/'
+    dest: config.uploadDir
 })
 var esClient = new elasticsearch.Client({
-    host: 'localhost:9200',
+    host: config.elasticSearchHost,
     log: 'trace'
 });
 
