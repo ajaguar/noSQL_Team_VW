@@ -16,4 +16,4 @@ npm start
 
 http://localhost:8888/#/upload -> upload file
 
-http://localhost:8888/#/ -> search filde
+http://localhost:8888/#/ -> search file
