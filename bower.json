@@ -1,11 +1,11 @@
-
 {
-  "name": "noSQL Team VW",
-  "version": "0.0.1",
-  "dependencies": {
-    "angular": "~1.4.7",
-    "angular-route": "~1.4.7",
-    "font-awesome": "~4.4.0",
-    "bootstrap": "~3.3.5"
-  }
+    "name": "noSQL Team VW",
+    "version": "0.0.1",
+    "dependencies": {
+        "angular": "~1.4.7",
+        "angular-route": "~1.4.7",
+        "font-awesome": "~4.4.0",
+        "bootstrap": "~3.3.5",
+        "angular-file-upload": "~2.2.0"
+    }
 }

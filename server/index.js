@@ -1,14 +1,14 @@
 'use strict';
 
 var express = require('express');
-var config = require("../config");
-var fs = require("fs");
-var multer = require("multer");
+var config = require('../config');
+var fs = require('fs');
+var multer = require('multer');
 var elasticsearch = require('elasticsearch');
 var app = express();
 var upload = multer({
     dest: config.uploadDir
-})
+});
 var esClient = new elasticsearch.Client({
     host: config.elasticSearchHost,
     log: 'trace'
@@ -16,6 +16,8 @@ var esClient = new elasticsearch.Client({
 
 
 app.use(express.static(__dirname + '/../client'));
+// serve files from ../../bower_components as static content at /bower_components
+app.use('/bower_components', express.static(__dirname + '../../bower_components'));
 
 app.post('/document', upload.single('document'), function (req, res) {
     fs.readFile(req.file.path, "utf-8", function (err, data) {
@@ -38,13 +40,13 @@ app.post('/document', upload.single('document'), function (req, res) {
             });
         });
     });
-    res.send("yes!");
+    res.send('yes!');
 });
 
 app.get("/document", function (req, res) {
     var search = req.query.search;
-    if(!search) 
-        throw "no search value given";
+    if (!search)
+        throw 'no search value given';
     esClient.search({
         "body": {
             "query": {
@@ -53,14 +55,14 @@ app.get("/document", function (req, res) {
                 }
             }
         },
-        "index": "file",
-        "type": "document"
+        'index': 'file',
+        'type': 'document'
     }, function (err, response) {
         if (err)
             throw err;
-        
+
         res.send(response);
-    })
+    });
 });
 
 

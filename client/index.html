@@ -1,10 +1,36 @@
 <!Doctype html>
-<html>
+<html ng-app="esApp" ng-controller="MainController">
+
 <head>
-    
+    <title ng-bind="title"></title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- dependencies -->
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/angular-route/angular-route.min.js"></script>
+    <!-- app -->
+    <script src="app.js"></script>
+    <script src="controllers/MainController.js"></script>
+    <script src="services/ElasticSearchService.js"></script>
 </head>
+
 <body>
-    <h1>Hallo</h1>
-    test
+    <div class="col-lg-6">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search for...">
+            <span class="input-group-btn">
+        <button class="btn btn-default" type="button">Go!</button>
+      </span>
+        </div>
+        <!-- /input-group -->
+    </div>
+    <!-- /.col-lg-6 -->
 </body>
+
 </html>

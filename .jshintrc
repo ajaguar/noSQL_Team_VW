@@ -1,0 +1,14 @@
+{
+    "curly": true,
+    "quotmark": "single",
+    "unused": true,
+
+    "globalstrict": true,
+    "laxbreak": true,
+    "laxcomma": true,
+
+    "esnext": true,
+
+    "node": true,
+    "mocha": true
+}
