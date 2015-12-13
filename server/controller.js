@@ -9,7 +9,7 @@ module.exports = function (app) {
 
     var upload = multer({
         dest: config.uploadDir
-    })
+    });
 
     var esClient = new elasticsearch.Client({
         host: config.elasticSearchHost,
