@@ -2,9 +2,9 @@
 
 module.exports = function (app) {
 
-    var config = require("../config");
-    var fs = require("fs");
-    var multer = require("multer");
+    var config = require('../config');
+    var fs = require('fs');
+    var multer = require('multer');
     var elasticsearch = require('elasticsearch');
 
     var upload = multer({
@@ -20,75 +20,82 @@ module.exports = function (app) {
 
     app.post('/document', upload.single('document'), function (req, res) {
         console.log(req.file);
-        fs.readFile(req.file.path, "utf-8", function (err, data) {
-            if (err) throw err;
+        fs.readFile(req.file.path, 'utf-8', function (err, data) {
+            if (err) {
+                throw err;
+            }
             console.log(req.file);
             console.log(data);
             esClient.create({
-                "index": 'file',
-                "type": 'document',
-                "body": {
-                    "title": req.file.name,
-                    "content": data,
-                    "published_at": new Date()
+                'index': 'file',
+                'type': 'document',
+                'body': {
+                    'title': req.file.name,
+                    'content': data,
+                    'published_at': new Date()
                 }
             }, function (error, response) {
-                if (error)
+                if (error) {
                     throw error;
+                }
                 fs.unlink(req.file.path, function (err) {
-                    if (err) throw err;
+                    if (err) {
+                        throw err;
+                    }
                 });
             });
         });
-        res.send("yes!");
+        res.send('yes!');
     });
 
-    app.get("/document", function (req, res) {
+    app.get('/document', function (req, res) {
         var search = req.query.search;
-        if (!search)
-            throw "no search value given";
-        esClient.search({
-            "body": {
-                "query": {
-                    "match": {
-                        "content": search
+        if (!search) {
+            res.status(400).send('no search value sent');
+        } else {
+            esClient.search({
+                'body': {
+                    'query': {
+                        'match': {
+                            'content': search
+                        }
                     }
+                },
+                'index': 'file',
+                'type': 'document'
+            }, function (err, response) {
+                if (err) {
+                    throw err;
                 }
-            },
-            "index": "file",
-            "type": "document"
-        }, function (err, response) {
-            if (err)
-                throw err;
-
-            res.send(response);
-        })
+                res.send(response);
+            });
+        }
     });
 
     function initIndexIfNotExists() {
         esClient.indices.delete({
-            index: "file"
+            index: 'file'
         }, function () {
-            console.log("creating index");
+            console.log('creating index');
             esClient.indices.create({
-                index: "file"
+                index: 'file'
             }, function () {
                 esClient.indices.putMapping({
-                    "body": {
-                        "properties": {
-                            "title": {
-                                "type": "string"
+                    'body': {
+                        'properties': {
+                            'title': {
+                                'type': 'string'
                             },
-                            "content": {
-                                "type": "string"
+                            'content': {
+                                'type': 'string'
                             },
-                            "published_at": {
-                                "type": "date"
+                            'published_at': {
+                                'type': 'date'
                             }
                         }
                     },
-                    "index": "file",
-                    "type": "document"
+                    'index': 'file',
+                    'type': 'document'
                 });
             });
         });
