@@ -12,14 +12,14 @@ angular.module('esApp', [
     $routeProvider
         .when('/', {
             templateUrl: 'views/searchTpl.html',
-            controller: 'SearchController'
+            controller: 'SearchController as search'
         })
         .when('/search', {
             redirectTo: '/'
         })
         .when('/upload', {
             templateUrl: 'views/uploadTpl.html',
-            controller: 'UploadController'
+            controller: 'UploadController as upload'
         })
         .otherwise({
             template: '404 not Found'

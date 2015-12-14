@@ -4,57 +4,43 @@
 
 angular.module('esApp.UploadController', [
     'esApp.service.ElasticSearch',
-    'angularFileUpload',
     'ng'
-]).controller('UploadController', (['$scope', 'FileUploader', function ($scope, FileUploader) {
-    var uploader = $scope.uploader = new FileUploader({
-        url: 'upload.php'
-    });
+])
+    .directive('fileModel', ['$parse', function ($parse) {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var model = $parse(attrs.fileModel);
+                var modelSetter = model.assign;
 
-    // FILTERS
-
-    uploader.filters.push({
-        name: 'customFilter',
-        fn: function (item /*{File|FileLikeObject}*/ , options) {
-            return this.queue.length < 10;
-        }
-    });
-
-    // CALLBACKS
-
-    uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/ , filter, options) {
-        console.info('onWhenAddingFileFailed', item, filter, options);
-    };
-    uploader.onAfterAddingFile = function (fileItem) {
-        console.info('onAfterAddingFile', fileItem);
-    };
-    uploader.onAfterAddingAll = function (addedFileItems) {
-        console.info('onAfterAddingAll', addedFileItems);
-    };
-    uploader.onBeforeUploadItem = function (item) {
-        console.info('onBeforeUploadItem', item);
-    };
-    uploader.onProgressItem = function (fileItem, progress) {
-        console.info('onProgressItem', fileItem, progress);
-    };
-    uploader.onProgressAll = function (progress) {
-        console.info('onProgressAll', progress);
-    };
-    uploader.onSuccessItem = function (fileItem, response, status, headers) {
-        console.info('onSuccessItem', fileItem, response, status, headers);
-    };
-    uploader.onErrorItem = function (fileItem, response, status, headers) {
-        console.info('onErrorItem', fileItem, response, status, headers);
-    };
-    uploader.onCancelItem = function (fileItem, response, status, headers) {
-        console.info('onCancelItem', fileItem, response, status, headers);
-    };
-    uploader.onCompleteItem = function (fileItem, response, status, headers) {
-        console.info('onCompleteItem', fileItem, response, status, headers);
-    };
-    uploader.onCompleteAll = function () {
-        console.info('onCompleteAll');
-    };
-
-    console.info('uploader', uploader);
-    }]));
+                element.bind('change', function () {
+                    scope.$apply(function () {
+                        modelSetter(scope, element[0].files[0]);
+                    });
+                });
+            }
+        };
+    }])
+    .service('fileUpload', ['$http', function ($http) {
+        this.uploadFileToUrl = function (file, uploadUrl) {
+            var fd = new FormData();
+            fd.append('file', file);
+            $http.post(uploadUrl, fd, {
+                    transformRequest: angular.identity,
+                    headers: {
+                        'Content-Type': undefined
+                    }
+                })
+                .success(function () {})
+                .error(function () {});
+        };
+    }])
+    .controller('UploadController', ['$scope', 'fileUpload', function ($scope, fileUpload) {
+        this.uploadFile = function () {
+            var file = this.file;
+            console.log('file is ');
+            console.dir(file);
+            var uploadUrl = '/document';
+            fileUpload.uploadFileToUrl(file, uploadUrl);
+        };
+    }]);
