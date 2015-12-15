@@ -30,7 +30,7 @@ module.exports = function (app) {
                 'index': 'file',
                 'type': 'document',
                 'body': {
-                    'title': req.file.name,
+                    'title': req.file.originalname,
                     'content': data,
                     'published_at': new Date()
                 }
@@ -59,7 +59,13 @@ module.exports = function (app) {
                         'match': {
                             'content': search
                         }
-                    }
+                    },
+                    'highlight': {
+                        'fields': {
+                            'content': {'fragment_size' : 50}
+                        }
+                    },
+                    fields: ['title']
                 },
                 'index': 'file',
                 'type': 'document'
