@@ -24,7 +24,7 @@ angular.module('esApp.UploadController', [
     .service('fileUpload', ['$http', function ($http) {
         this.uploadFileToUrl = function (file, uploadUrl) {
             var fd = new FormData();
-            fd.append('file', file);
+            fd.append('document', file);
             $http.post(uploadUrl, fd, {
                     transformRequest: angular.identity,
                     headers: {
