@@ -38,8 +38,6 @@ angular.module('esApp.UploadController', [
     .controller('UploadController', ['$scope', 'fileUpload', function ($scope, fileUpload) {
         this.uploadFile = function () {
             var file = this.file;
-            console.log('file is ');
-            console.dir(file);
             var uploadUrl = '/document';
             fileUpload.uploadFileToUrl(file, uploadUrl);
         };

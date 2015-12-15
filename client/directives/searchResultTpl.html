@@ -1,0 +1,11 @@
+<div>
+    <div class="row">
+        <span>
+            <label>{{hit._score}}</label>
+        <a href="{{hit.link}}">{{hit.fields.title[0]}}</a>
+        </span>
+    </div>
+    <div ng-repeat="highlight in hit.highlight.content" class="row">
+        {{highlight}}
+    </div>
+</div>
