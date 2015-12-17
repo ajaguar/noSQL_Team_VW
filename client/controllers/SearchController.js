@@ -32,7 +32,4 @@ angular.module('esApp.SearchController', [
             $scope.$apply();
         });
         
-         $scope.$on("newdocfound", function(event, doc) {
-             alert(doc);
-        });
 }]);
