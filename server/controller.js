@@ -43,9 +43,9 @@ module.exports = function (app) {
                         throw err;
                     }
                 });
+                res.status(201).end();
             });
         });
-        res.send('yes!');
     });
 
     app.get('/document', function (req, res) {
