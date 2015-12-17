@@ -24,4 +24,15 @@ angular.module('esApp.SearchController', [
                 })
                 .error(function () {});
         };
+        $scope.subscription = [];
+        
+        
+        $scope.$on("subscription", function(event, subscription) {
+            $scope.subscription = subscription;
+            $scope.$apply();
+        });
+        
+         $scope.$on("newdocfound", function(event, doc) {
+             alert(doc);
+        });
 }]);

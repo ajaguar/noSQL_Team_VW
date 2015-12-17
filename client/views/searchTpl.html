@@ -7,4 +7,8 @@
     </div>
     <searchresult ng-repeat="hit in search.results" class="row" hit="hit">
     </searchresult>
+    <h3>Your Subscriptions:</h3>
+    <ol>
+        <li ng-repeat="sub in subscription">{{sub}}</li>
+    </ol>
 </div>

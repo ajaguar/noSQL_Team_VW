@@ -3,8 +3,14 @@
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
-var controller = require('./controller')(app);
-var socket = require('./socket')(http);
+var elasticsearch = require('elasticsearch');
+var config = require('../config');
+var esClient = new elasticsearch.Client({
+    host: config.elasticSearchHost,
+    log: 'trace'
+});
+var socket = require('./socket')(http, esClient);
+require('./controller')(app, esClient, socket);
 
 app.use(express.static(__dirname + '/../client'));
 app.use('/bower_components', express.static(__dirname + '../../bower_components'));

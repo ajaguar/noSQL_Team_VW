@@ -1,25 +1,21 @@
 'use strict';
 
-module.exports = function (app) {
+module.exports = function (app, esClient, socket) {
 
     var config = require('../config');
     var fs = require('fs');
     var multer = require('multer');
-    var elasticsearch = require('elasticsearch');
+    var _ = require('underscore');
 
     var upload = multer({
         dest: config.uploadDir
     });
 
-    var esClient = new elasticsearch.Client({
-        host: config.elasticSearchHost,
-        log: 'trace'
-    });
-
     //initIndexIfNotExists();
+    clearPercolator();
 
     app.post('/document', upload.single('document'), function (req, res) {
-        console.log(req.file);
+        var createdFileId = -1;
         fs.readFile(req.file.path, 'utf-8', function (err, data) {
             if (err) {
                 throw err;
@@ -38,11 +34,25 @@ module.exports = function (app) {
                 if (error) {
                     throw error;
                 }
+                createdFileId = response._id;
                 fs.unlink(req.file.path, function (err) {
                     if (err) {
                         throw err;
                     }
                 });
+
+                esClient.percolate({
+                    index: 'file',
+                    type: 'document',
+                    id: createdFileId
+                }, function (error, response) {
+                    _.each(response.matches, function(match) {
+                       var socketId = match._id.replace(/\-\d$/, '');
+                        socket.emitSocketId(socketId, 'NEW DOC FOUND: '+createdFileId+' !!!');
+                    });
+
+                });
+
                 res.status(201).end();
             });
         });
@@ -65,7 +75,7 @@ module.exports = function (app) {
                                 },
                                 {
                                     'wildcard': {
-                                        'title': '*'+search+'*'
+                                        'title': '*' + search + '*'
                                     }
                                 }
                             ]
@@ -125,4 +135,20 @@ module.exports = function (app) {
         });
     }
 
-}
+    function clearPercolator() {
+        esClient.search({
+            'index': 'file',
+            'type': '.percolator'
+        }, function (error, response) {
+            for (var i in response.hits.hits) {
+                var hit = response.hits.hits[i];
+                esClient.delete({
+                    'index': 'file',
+                    'type': '.percolator',
+                    'id': hit._id
+                }, function (error, response) {});
+            }
+        });
+
+    }
+};
