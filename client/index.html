@@ -18,17 +18,11 @@
     <script src="/bower_components/socket.io-client/socket.io.js"></script>
     <!-- app -->
     <script src="/app.js"></script>
+    <script src="/services/ElasticSearchService.js"></script>
     <script src="/controllers/MainController.js"></script>
     <script src="/controllers/SearchController.js"></script>
     <script src="/controllers/UploadController.js"></script>
-    <script src="/services/ElasticSearchService.js"></script>
-    <script>
-        var socket = io();
-        socket.emit("subscribe", "NoSQL");
-        socket.on("response", function(msg) {
-           alert(msg); 
-        });
-    </script>
+    <script src="/directives/searchResultDirective.js"></script>
 </head>
 
 <body>

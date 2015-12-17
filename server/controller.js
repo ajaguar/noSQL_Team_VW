@@ -16,7 +16,7 @@ module.exports = function (app) {
         log: 'trace'
     });
 
-    initIndexIfNotExists();
+    //initIndexIfNotExists();
 
     app.post('/document', upload.single('document'), function (req, res) {
         console.log(req.file);
@@ -30,7 +30,7 @@ module.exports = function (app) {
                 'index': 'file',
                 'type': 'document',
                 'body': {
-                    'title': req.file.name,
+                    'title': req.file.originalname,
                     'content': data,
                     'published_at': new Date()
                 }
@@ -43,9 +43,9 @@ module.exports = function (app) {
                         throw err;
                     }
                 });
+                res.status(201).end();
             });
         });
-        res.send('yes!');
     });
 
     app.get('/document', function (req, res) {
@@ -56,10 +56,33 @@ module.exports = function (app) {
             esClient.search({
                 'body': {
                     'query': {
-                        'match': {
-                            'content': search
+                        'bool': {
+                            should: [
+                                {
+                                    'match': {
+                                        'content': search
+                                    }
+                                },
+                                {
+                                    'wildcard': {
+                                        'title': '*'+search+'*'
+                                    }
+                                }
+                            ]
                         }
-                    }
+
+                    },
+                    'highlight': {
+                        'fields': {
+                            'content': {
+                                'fragment_size': 50
+                            },
+                            'title': {
+                                fragment_size: 0
+                            }
+                        }
+                    },
+                    fields: ['title']
                 },
                 'index': 'file',
                 'type': 'document'
@@ -67,7 +90,7 @@ module.exports = function (app) {
                 if (err) {
                     throw err;
                 }
-                res.send(response);
+                res.send(response.hits);
             });
         }
     });
@@ -84,7 +107,8 @@ module.exports = function (app) {
                     'body': {
                         'properties': {
                             'title': {
-                                'type': 'string'
+                                'type': 'string',
+                                'index': 'not_analyzed'
                             },
                             'content': {
                                 'type': 'string'
