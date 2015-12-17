@@ -16,7 +16,7 @@ module.exports = function (app) {
         log: 'trace'
     });
 
-    initIndexIfNotExists();
+    //initIndexIfNotExists();
 
     app.post('/document', upload.single('document'), function (req, res) {
         console.log(req.file);
