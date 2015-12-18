@@ -16,17 +16,21 @@ angular.module('esApp.SearchController', [
         this.keyword = '';
         this.results = $scope.results = [];
         this.searchKeyword = function () {
-            var requestUrl = 'http://localhost:8888/document?search=' + this.keyword;
-            // remove all results
-            $scope.results = $scope.results.splice(0, $scope.results.length);
-            $http.get(requestUrl)
-                .success(function (data) {
-                    console.log(data);
-                    // add all results
-                    angular.forEach(data.hits, function (hit) {
-                        $scope.results.push(hit);
-                    });
-                })
-                .error(function () {});
+            if (this.keyword !== '') {
+                var requestUrl = 'http://localhost:8888/document?search=' + this.keyword;
+                // remove all results
+                $scope.results.splice(0, $scope.results.length);
+                $http.get(requestUrl)
+                    .success(function (data) {
+                        $scope.results.splice(0, $scope.results.length);
+                        // add all results
+                        angular.forEach(data.hits, function (hit) {
+                            $scope.results.push(hit);
+                        });
+                    })
+                    .error(function () {});
+            } else {
+                $scope.results.splice(0, $scope.results.length);
+            }
         };
 }]));
