@@ -7,6 +7,11 @@ angular.module('esApp.SearchController', [
     'esApp.directive.SearchResult',
     'ng'
 ])
+    .filter('to_trusted', ['$sce', function ($sce) {
+        return function (text) {
+            return $sce.trustAsHtml(text);
+        };
+    }])
     .controller('SearchController', (['$scope', '$http', function ($scope, $http) {
         this.keyword = '';
         this.results = $scope.results = [];
@@ -16,6 +21,7 @@ angular.module('esApp.SearchController', [
             $scope.results = $scope.results.splice(0, $scope.results.length);
             $http.get(requestUrl)
                 .success(function (data) {
+                    console.log(data);
                     // add all results
                     angular.forEach(data.hits, function (hit) {
                         $scope.results.push(hit);
