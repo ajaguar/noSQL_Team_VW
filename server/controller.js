@@ -50,7 +50,7 @@ module.exports = function (app) {
 
     app.get('/document', function (req, res) {
         //remove all non alpha-numeric characters for security reasons regarding the inline scripting
-        var search = req.query.search.replace(/[^\w\s\u00C0-\u017F]+/g, '').toLowerCase();
+        var search = req.query.search.replace(/[^\w\u00C0-\u017F]+/g, '').toLowerCase();
         if (!search) {
             res.status(400).send('no search value sent');
         } else {
