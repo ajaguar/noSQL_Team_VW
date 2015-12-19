@@ -50,7 +50,18 @@ module.exports = function (app) {
 
     app.get('/document', function (req, res) {
         //remove all non alpha-numeric characters for security reasons regarding the inline scripting
-        var search = req.query.search.replace(/[^\w\u00C0-\u017F]+/g, '').toLowerCase();
+        var search = req.query.search.replace(/[^\w\s\u00C0-\u017F]+/g, '').toLowerCase(),
+            terms = search.split(' '),
+            searchScript = '',
+            searchScriptTemplate = '_index["content"]["{{searchvalue}}"].tf()';
+        
+        for(var i in terms) {
+            searchScript += searchScriptTemplate.replace('{{searchvalue}}', terms[i]);
+            if(i != terms.length-1) {
+                searchScript += " + ";
+            }
+        }
+        
         if (!search) {
             res.status(400).send('no search value sent');
         } else {
@@ -67,7 +78,7 @@ module.exports = function (app) {
                                 'functions': [
                                     {
                                         'script_score': {
-                                            'script': '_index["content"]["' + search + '"].tf() + _index["title"]["' + search + '"].tf()'
+                                            'script': searchScript
                                         }
                                 }
                             ]
