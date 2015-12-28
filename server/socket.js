@@ -24,7 +24,6 @@ module.exports = function (http, esClient) {
                 esClient.index({
                     index: 'file',
                     type: '.percolator',
-                    id: socket.id + '-' + client.subscription.length,
                     body: {
                         query: {
                             'bool': {
@@ -41,7 +40,9 @@ module.exports = function (http, esClient) {
                                 }
                             ]
                             }
-                        }
+                        },
+                        socket: socket.id,
+                        term: message
                     }
                 }, function (error, response) {
                     if (error) {

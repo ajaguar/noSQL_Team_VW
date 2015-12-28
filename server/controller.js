@@ -46,9 +46,19 @@ module.exports = function (app, esClient, socket) {
                     type: 'document',
                     id: createdFileId
                 }, function (error, response) {
-                    _.each(response.matches, function(match) {
-                       var socketId = match._id.replace(/\-\d$/, '');
-                        socket.emitSocketId(socketId, 'NEW DOC FOUND: '+createdFileId+' !!!');
+                    _.each(response.matches, function (match) {
+                        esClient.get({
+                            'id': match._id,
+                            'index': 'file',
+                            'type': '.percolator',
+                            'fields': ['socket', 'term']
+                        }, function (err, response) {
+                            if (err) {
+                                throw err;
+                            }
+                            var socketId = response.fields.socket;
+                            socket.emitSocketId(socketId, 'NEW DOC FOUND: ' + createdFileId + '("'+req.file.originalname+'") for search term "'+ response.fields.term +'"!!!');
+                        });
                     });
 
                 });
