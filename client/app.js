@@ -25,8 +25,8 @@ angular.module('esApp', [
         .otherwise({
             template: '404 not Found'
         });
-}).run(['$rootScope', function ($rootScope) {
+}).run(['$rootScope', 'esService', function ($rootScope, esService) {
     $rootScope.$on('newdocfound', function (event, doc) {
-        alert(doc);
+        esService.sendNotification('For your search term "'+doc.searchTerm+'", filename: "'+doc.filename+'"', 'New document found');
     });
 }]);

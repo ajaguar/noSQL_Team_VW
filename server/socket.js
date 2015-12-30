@@ -57,8 +57,10 @@ module.exports = function (http, esClient) {
     });
 
     var emitSocketId = function (id, msg) {
-        console.log("sending newdocfound");
-        clients[id].socket.emit('newdocfound', msg);
+        var notifyingClient = clients[id];
+        if (notifyingClient) {
+            notifyingClient.socket.emit('newdocfound', msg);
+        }
     };
 
     return {

@@ -16,12 +16,14 @@ module.exports = function (app, esClient, socket) {
 
     app.post('/document', upload.single('document'), function (req, res) {
         var createdFileId = -1;
+        if (!req.file) {
+            res.status(400).end();
+            return;
+        }
         fs.readFile(req.file.path, 'utf-8', function (err, data) {
             if (err) {
                 throw err;
             }
-            console.log(req.file);
-            console.log(data);
             esClient.create({
                 'index': 'file',
                 'type': 'document',
@@ -56,8 +58,13 @@ module.exports = function (app, esClient, socket) {
                             if (err) {
                                 throw err;
                             }
-                            var socketId = response.fields.socket;
-                            socket.emitSocketId(socketId, 'NEW DOC FOUND: ' + createdFileId + '("'+req.file.originalname+'") for search term "'+ response.fields.term +'"!!!');
+                            var socketId = response.fields.socket,
+                                notificationObject = {
+                                    'filename': req.file.originalname,
+                                    'fileId': createdFileId,
+                                    'searchTerm': response.fields.term
+                                };
+                            socket.emitSocketId(socketId, notificationObject);
                         });
                     });
 
@@ -146,6 +153,12 @@ module.exports = function (app, esClient, socket) {
     }
 
     function clearPercolator() {
+        var onDelete = function (error, response) {
+            if(error) {
+                console.log(error);
+                console.log(response);
+            }
+        };
         esClient.search({
             'index': 'file',
             'type': '.percolator'
@@ -156,7 +169,7 @@ module.exports = function (app, esClient, socket) {
                     'index': 'file',
                     'type': '.percolator',
                     'id': hit._id
-                }, function (error, response) {});
+                }, onDelete);
             }
         });
 
