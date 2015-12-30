@@ -1,11 +1,13 @@
 <div class="col-md-offset-3 col-md-6">
-    <div class="row input-group">
-        <input ng-model="search.keyword" type="text" class="form-control" placeholder="Search for...">
-        <span class="input-group-btn">
-        <button class="btn btn-default" ng-click="search.searchKeyword()" type="button">Go!</button>
+    <form role="form" ng-submit="search.searchKeyword()">
+        <div class="row input-group">
+            <input ng-model="search.keyword" type="text" class="form-control" placeholder="Search for...">
+            <span class="input-group-btn">
+        <button class="btn btn-default" type="button">Go!</button>
       </span>
-    </div>
-    <searchresult ng-repeat="hit in search.results" class="row" hit="hit">
+        </div>
+    </form>
+    <searchresult ng-repeat="hit in results" class="row" hit="hit">
     </searchresult>
     <h3>Your Subscriptions:</h3>
     <ol>

@@ -76,49 +76,62 @@ module.exports = function (app, esClient, socket) {
     });
 
     app.get('/document', function (req, res) {
-        var search = req.query.search;
+        //remove all non alpha-numeric characters for security reasons regarding the inline scripting
+        var search = req.query.search.replace(/[^\w\s\u00C0-\u017F]+/g, '').toLowerCase(),
+            terms = search.split(' '),
+            searchScript = '',
+            searchScriptTemplate = '_index["content"]["{{searchvalue}}"].tf()';
+        
+        for(var i in terms) {
+            searchScript += searchScriptTemplate.replace('{{searchvalue}}', terms[i]);
+            if(i != terms.length-1) {
+                searchScript += " + ";
+            }
+        }
+        
         if (!search) {
             res.status(400).send('no search value sent');
         } else {
             esClient.search({
-                'body': {
-                    'query': {
-                        'bool': {
-                            should: [
-                                {
+                    'body': {
+                        'query': {
+                            'function_score': {
+                                'query': {
                                     'match': {
                                         'content': search
                                     }
                                 },
-                                {
-                                    'wildcard': {
-                                        'title': '*' + search + '*'
-                                    }
+                                'boost_mode': 'replace',
+                                'functions': [
+                                    {
+                                        'script_score': {
+                                            'script': searchScript
+                                        }
                                 }
                             ]
-                        }
-
-                    },
-                    'highlight': {
-                        'fields': {
-                            'content': {
-                                'fragment_size': 50
-                            },
-                            'title': {
-                                fragment_size: 0
                             }
-                        }
+                        },
+                        'highlight': {
+                            'fields': {
+                                'content': {
+                                    'fragment_size': 50
+                                },
+                                'title': {
+                                    fragment_size: 0
+                                }
+                            }
+                        },
+                        fields: ['title']
                     },
-                    fields: ['title']
+                    'index': 'file',
+                    'type': 'document'
                 },
-                'index': 'file',
-                'type': 'document'
-            }, function (err, response) {
-                if (err) {
-                    throw err;
-                }
-                res.send(response.hits);
-            });
+                function (err, response) {
+                    if (err) {
+                        throw err;
+                    }
+                    res.send(response.hits);
+                });
         }
     });
 
@@ -135,10 +148,11 @@ module.exports = function (app, esClient, socket) {
                         'properties': {
                             'title': {
                                 'type': 'string',
-                                'index': 'not_analyzed'
+                                'index': 'not_analyzed',
+                                'index_options': 'freqs'
                             },
                             'content': {
-                                'type': 'string'
+                                'type': 'string',
                             },
                             'published_at': {
                                 'type': 'date'
