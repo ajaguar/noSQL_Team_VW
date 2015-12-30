@@ -6,6 +6,7 @@ angular.module('esApp', [
     'esApp.MainController',
     'esApp.UploadController',
     'esApp.SearchController',
+    'esApp.service.ElasticSearch',
     'ngRoute',
     'ng'
 ]).config(function ($routeProvider, $locationProvider) {
@@ -24,4 +25,8 @@ angular.module('esApp', [
         .otherwise({
             template: '404 not Found'
         });
-});
+}).run(['$rootScope', 'esService', function ($rootScope, esService) {
+    $rootScope.$on('newdocfound', function (event, doc) {
+        esService.sendNotification('For your search term "'+doc.searchTerm+'", filename: "'+doc.filename+'"', 'New document found');
+    });
+}]);
