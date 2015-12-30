@@ -12,21 +12,29 @@ angular.module('esApp.SearchController', [
         };
     }])
     .controller('SearchController', ['$scope', '$http', 'esService', '$location', function ($scope, $http, esService, $location) {
-        var queryKeyword = $location.search().keyword;
+        this.queryKeyword = $location.search().keyword;
+        var ctrl = this;
+
+        $scope.$on('$routeUpdate', function () {
+            if ($location.search().keyword && $location.search().keyword != ctrl.keyword) {
+                ctrl.keyword = $location.search().keyword;
+                ctrl.queryKeyword = ctrl.keyword;
+                ctrl.searchKeyword();
+            }
+        });
+
         this.keyword = '';
         this.results = $scope.results = [];
         this.searchKeyword = function () {
             if (this.keyword !== '') {
                 /* if the current keyword is not sent via url -> subscribe keyword */
-                if (queryKeyword != this.keyword) {
+                if (this.queryKeyword != this.keyword) {
                     esService.subscribe(this.keyword);
                 }
-
-                var requestUrl = 'http://localhost:8888/document?search=' + this.keyword;
                 // remove all results
                 $scope.results.splice(0, $scope.results.length);
-                $http.get(requestUrl)
-                    .success(function (data) {
+                var searchResult = esService.search(this.keyword);
+                searchResult.success(function (data) {
                         $scope.results.splice(0, $scope.results.length);
                         // add all results
                         angular.forEach(data.hits, function (hit) {
@@ -38,8 +46,8 @@ angular.module('esApp.SearchController', [
                 $scope.results.splice(0, $scope.results.length);
             }
         };
-        if (queryKeyword) {
-            this.keyword = queryKeyword;
+        if (this.queryKeyword) {
+            this.keyword = this.queryKeyword;
             this.searchKeyword();
         } else {
             this.keyword = '';

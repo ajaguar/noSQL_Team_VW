@@ -9,11 +9,18 @@ angular.module('esApp', [
     'esApp.service.ElasticSearch',
     'ngRoute',
     'ng'
-]).config(function ($routeProvider, $locationProvider) {
+]).constant('config', {
+    'url': 'http://localhost',
+    'port': '8888',
+    'urlPort': (function () {
+        return this.url + ':' + this.port;
+    })
+}).config(['$routeProvider', function ($routeProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'views/searchTpl.html',
-            controller: 'SearchController as search'
+            controller: 'SearchController as search',
+            reloadOnSearch: false
         })
         .when('/search', {
             redirectTo: '/'
@@ -25,8 +32,8 @@ angular.module('esApp', [
         .otherwise({
             template: '404 not Found'
         });
-}).run(['$rootScope', 'esService', function ($rootScope, esService) {
+}]).run(['$rootScope', 'esService', function ($rootScope, esService) {
     $rootScope.$on('newdocfound', function (event, doc) {
-        esService.sendNotification('For your search term "'+doc.searchTerm+'", filename: "'+doc.filename+'"', 'New document found');
+        esService.sendNewDocFoundNotification(doc);
     });
 }]);

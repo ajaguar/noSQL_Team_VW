@@ -53,7 +53,7 @@ module.exports = function (app, esClient, socket) {
                             'id': match._id,
                             'index': 'file',
                             'type': '.percolator',
-                            'fields': ['socket', 'term']
+                            'fields': ['socket', 'keyword']
                         }, function (err, response) {
                             if (err) {
                                 throw err;
@@ -62,7 +62,7 @@ module.exports = function (app, esClient, socket) {
                                 notificationObject = {
                                     'filename': req.file.originalname,
                                     'fileId': createdFileId,
-                                    'searchTerm': response.fields.term
+                                    'keyword': response.fields.keyword
                                 };
                             socket.emitSocketId(socketId, notificationObject);
                         });
@@ -76,63 +76,53 @@ module.exports = function (app, esClient, socket) {
     });
 
     app.get('/document', function (req, res) {
+        if (!req.query.search) {
+            res.status(400).send('no search value sent').end();
+            return;
+        }
         //remove all non alpha-numeric characters for security reasons regarding the inline scripting
         var search = req.query.search.replace(/[^\w\s\u00C0-\u017F]+/g, '').toLowerCase(),
-            terms = search.split(' '),
-            searchScript = '',
-            searchScriptTemplate = '_index["content"]["{{searchvalue}}"].tf()';
-        
-        for(var i in terms) {
-            searchScript += searchScriptTemplate.replace('{{searchvalue}}', terms[i]);
-            if(i != terms.length-1) {
-                searchScript += " + ";
-            }
-        }
-        
-        if (!search) {
-            res.status(400).send('no search value sent');
-        } else {
-            esClient.search({
-                    'body': {
-                        'query': {
-                            'function_score': {
-                                'query': {
-                                    'match': {
-                                        'content': search
+            searchScript = '_index["content"]["{{searchvalue}}"].tf()'.replace('{{searchvalue}}', search);
+        esClient.search({
+                'body': {
+                    'query': {
+                        'function_score': {
+                            'query': {
+                                'match': {
+                                    'content': search
+                                }
+                            },
+                            'boost_mode': 'replace',
+                            'functions': [
+                                {
+                                    'script_score': {
+                                        'script': searchScript
                                     }
-                                },
-                                'boost_mode': 'replace',
-                                'functions': [
-                                    {
-                                        'script_score': {
-                                            'script': searchScript
-                                        }
                                 }
                             ]
-                            }
-                        },
-                        'highlight': {
-                            'fields': {
-                                'content': {
-                                    'fragment_size': 50
-                                },
-                                'title': {
-                                    fragment_size: 0
-                                }
-                            }
-                        },
-                        fields: ['title']
+                        }
                     },
-                    'index': 'file',
-                    'type': 'document'
+                    'highlight': {
+                        'fields': {
+                            'content': {
+                                'fragment_size': 50
+                            },
+                            'title': {
+                                fragment_size: 0
+                            }
+                        }
+                    },
+                    fields: ['title']
                 },
-                function (err, response) {
-                    if (err) {
-                        throw err;
-                    }
-                    res.send(response.hits);
-                });
-        }
+                'index': 'file',
+                'type': 'document'
+            },
+            function (err, response) {
+                if (err) {
+                    throw err;
+                }
+                res.send(response.hits);
+            });
     });
 
     function initIndexIfNotExists() {
@@ -168,7 +158,7 @@ module.exports = function (app, esClient, socket) {
 
     function clearPercolator() {
         var onDelete = function (error, response) {
-            if(error) {
+            if (error) {
                 console.log(error);
                 console.log(response);
             }

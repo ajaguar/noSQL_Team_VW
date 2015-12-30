@@ -12,43 +12,55 @@ module.exports = function (http, esClient) {
             subscription: []
         };
 
+        /* clear subscription list */
+        socket.emit('subscription', []);
+
         socket.on('disconnect', function () {
             if (clients[socket.id]) {
                 delete clients[socket.id];
             }
+            /* clear subscription list */
+            socket.emit('subscription', []);
+            
         });
 
-        socket.on('subscribe', function (message) {
+        socket.on('subscribe', function (keyword) {
             var client = clients[socket.id];
-            if (_.isString(message) && client.subscription.indexOf(message) <= -1) {
+
+            //remove all non alpha-numeric characters for security reasons regarding the inline scripting
+            keyword = keyword.replace(/[^\w\s\u00C0-\u017F]+/g, '').toLowerCase();
+            var searchScript = '_index["content"]["{{searchvalue}}"].tf()'.replace('{{searchValue}}', keyword);
+
+            if (_.isString(keyword) && client.subscription.indexOf(keyword) <= -1) {
                 esClient.index({
                     index: 'file',
                     type: '.percolator',
                     body: {
-                        query: {
-                            'bool': {
-                                should: [
-                                    {
-                                        'match': {
-                                            'content': message
-                                        }
+                        'query': {
+                            'function_score': {
+                                'query': {
+                                    'match': {
+                                        'content': keyword
+                                    }
                                 },
+                                'boost_mode': 'replace',
+                                'functions': [
                                     {
-                                        'wildcard': {
-                                            'title': '*' + message + '*'
+                                        'script_score': {
+                                            'script': searchScript
                                         }
                                 }
                             ]
                             }
                         },
                         socket: socket.id,
-                        term: message
+                        keyword: keyword
                     }
                 }, function (error, response) {
                     if (error) {
                         throw error;
                     }
-                    client.subscription.push(message);
+                    client.subscription.push(keyword);
                     socket.emit('subscription', client.subscription);
                 });
             }

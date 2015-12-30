@@ -1,16 +1,18 @@
+<div class="col-md-3">
+    <h4>Your Subscriptions:</h4>
+    <ol>
+        <li ng-repeat="sub in subscription">{{sub}}</li>
+    </ol>
+</div>
 <div class="col-md-offset-3 col-md-6">
     <form role="form" ng-submit="search.searchKeyword()">
         <div class="row input-group">
             <input ng-model="search.keyword" type="text" class="form-control" placeholder="Search for...">
             <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Go!</button>
+        <button class="btn btn-default" type="button" ng-click="search.searchKeyword()">Go!</button>
       </span>
         </div>
     </form>
     <searchresult ng-repeat="hit in results" class="row" hit="hit">
     </searchresult>
-    <h3>Your Subscriptions:</h3>
-    <ol>
-        <li ng-repeat="sub in subscription">{{sub}}</li>
-    </ol>
 </div>
