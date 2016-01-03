@@ -81,7 +81,7 @@ module.exports = function (app, esClient, socket) {
             return;
         }
         //remove all non alpha-numeric characters for security reasons regarding the inline scripting
-        var search = req.query.search.replace(/[^\w\s\u00C0-\u017F]+/g, '').toLowerCase(),
+        var search = req.query.search.replace(/[^\w\u00C0-\u017F]+/g, '').toLowerCase(),
             searchScript = '_index["content"]["{{searchvalue}}"].tf()'.replace('{{searchvalue}}', search);
         esClient.search({
                 'body': {

@@ -5,6 +5,7 @@
 angular.module('esApp.SearchController', [
     'esApp.service.ElasticSearch',
     'esApp.directive.SearchResult',
+    'esApp.directive.KeywordInput',
     'ng'
 ]).filter('to_trusted', ['$sce', function ($sce) {
         return function (text) {

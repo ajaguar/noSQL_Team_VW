@@ -22,7 +22,7 @@ module.exports = function (http, esClient) {
             /* clear subscription list */
             socket.emit('subscription', []);
 
-            /* delete percolators */
+            /* delete percolators for given socket id*/
             esClient.search({
                 'index': 'file',
                 'type': '.percolator',
@@ -51,7 +51,7 @@ module.exports = function (http, esClient) {
             var client = clients[socket.id];
 
             //remove all non alpha-numeric characters for security reasons regarding the inline scripting
-            keyword = keyword.replace(/[^\w\s\u00C0-\u017F]+/g, '').toLowerCase();
+            keyword = keyword.replace(/[^\w\u00C0-\u017F]+/g, '').toLowerCase();
             var searchScript = '_index["content"]["{{searchvalue}}"].tf()'.replace('{{searchValue}}', keyword);
 
             // create new percolator
