@@ -12,7 +12,7 @@ module.exports = function (http, esClient) {
             subscription: []
         };
 
-        /* clear subscription list */
+        // clear subscription list 
         socket.emit('subscription', []);
 
         socket.on('disconnect', function () {
@@ -21,7 +21,30 @@ module.exports = function (http, esClient) {
             }
             /* clear subscription list */
             socket.emit('subscription', []);
-            
+
+            /* delete percolators */
+            esClient.search({
+                'index': 'file',
+                'type': '.percolator',
+                body: {
+                    query: {
+                        match: {
+                            socket: socket.id
+                        }
+                    }
+                }
+            }, function (error, response) {
+                if (response.hits) {
+                    for (var i in response.hits.hits) {
+                        var hit = response.hits.hits[i];
+                        esClient.delete({
+                            'index': 'file',
+                            'type': '.percolator',
+                            'id': hit._id
+                        });
+                    }
+                }
+            });
         });
 
         socket.on('subscribe', function (keyword) {
@@ -31,6 +54,7 @@ module.exports = function (http, esClient) {
             keyword = keyword.replace(/[^\w\s\u00C0-\u017F]+/g, '').toLowerCase();
             var searchScript = '_index["content"]["{{searchvalue}}"].tf()'.replace('{{searchValue}}', keyword);
 
+            // create new percolator
             if (_.isString(keyword) && client.subscription.indexOf(keyword) <= -1) {
                 esClient.index({
                     index: 'file',

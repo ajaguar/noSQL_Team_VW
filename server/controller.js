@@ -167,13 +167,15 @@ module.exports = function (app, esClient, socket) {
             'index': 'file',
             'type': '.percolator'
         }, function (error, response) {
-            for (var i in response.hits.hits) {
-                var hit = response.hits.hits[i];
-                esClient.delete({
-                    'index': 'file',
-                    'type': '.percolator',
-                    'id': hit._id
-                }, onDelete);
+            if (response.hits) {
+                for (var i in response.hits.hits) {
+                    var hit = response.hits.hits[i];
+                    esClient.delete({
+                        'index': 'file',
+                        'type': '.percolator',
+                        'id': hit._id
+                    }, onDelete);
+                }
             }
         });
 
