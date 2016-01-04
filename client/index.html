@@ -28,14 +28,37 @@
     <script src="/directives/keywordInputDirective.js"></script>
 </head>
 
-<body>
-    <div class="col-md-offset-3 col-md-6">
-        <h1>Elastic Search</h1>
+<body ng-controller="SearchController">
+    <div class="row">
+
+        <div class="col-md-offset-3  col-md-6">
+            <h1>Elastic Search</h1>
+        </div>
     </div>
-
-    <div ng-include="'views/searchTpl.html'"></div>
-
-    <div ng-include="'views/uploadTpl.html'"></div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">Subscriptions</div>
+                <div class="panel-body">
+                    <ol>
+                        <li ng-repeat="sub in subscription">{{sub}}</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" ng-include="'views/searchTpl.html'"></div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">Notifications</div>
+                <div class="panel-body">
+                    note
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6" ng-controller="UploadController" ng-include="'views/uploadTpl.html'"></div>
+    </div>
 </body>
 
 </html>
