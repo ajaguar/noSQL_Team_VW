@@ -22,7 +22,7 @@ angular.module('esApp.UploadController', [
         };
     }])
     .service('fileUpload', ['$http', function ($http) {
-        this.uploadFileToUrl = function (file, uploadUrl) {
+        this.uploadFileToUrl = function (file, uploadUrl, cb) {
             var fd = new FormData();
             fd.append('document', file);
             $http.post(uploadUrl, fd, {
@@ -31,14 +31,25 @@ angular.module('esApp.UploadController', [
                         'Content-Type': undefined
                     }
                 })
-                .success(function () {})
-                .error(function () {});
+                .success(function () {
+                    cb();
+                })
+                .error(function () {
+                    $.notify("no upload", "warning");
+
+                });
         };
     }])
     .controller('UploadController', ['$scope', 'fileUpload', function ($scope, fileUpload) {
         $scope.uploadFile = function () {
             var file = $scope.file;
             var uploadUrl = '/document';
-            fileUpload.uploadFileToUrl(file, uploadUrl);
+
+            function callback() {
+                $.notify("upload successfull: " + file.name, "success");
+                $scope.file.success = true;
+            };
+            fileUpload.uploadFileToUrl(file, uploadUrl, callback);
+
         };
     }]);

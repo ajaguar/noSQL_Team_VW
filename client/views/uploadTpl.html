@@ -2,10 +2,10 @@
     <h3>Upload File</h3>
     <div class="row">
         <div class="col-md-10">
-            <div class="input-group">
+            <div class="input-group" ng-class="{'has-success': file.success}">
                 <span class="input-group-btn">
             <div class="fileUpload btn btn-primary">
-                <span>Auswählen</span>
+                <span>choose</span>
                 <input type="file" file-model="file" class="upload" />
             </div>
             </span>
