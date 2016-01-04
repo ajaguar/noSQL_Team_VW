@@ -10,12 +10,13 @@ angular.module('esApp', [
     'ngRoute',
     'ng'
 ]).constant('config', {
-    'url': 'http://localhost',
-    'port': '8888',
-    'urlPort': (function () {
-        return this.url + ':' + this.port;
+        'url': 'http://localhost',
+        'port': '8888',
+        'urlPort': (function () {
+            return this.url + ':' + this.port;
+        })
     })
-}).config(['$routeProvider', function ($routeProvider) {
+    /*.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'views/searchTpl.html',
@@ -32,8 +33,9 @@ angular.module('esApp', [
         .otherwise({
             template: '404 not Found'
         });
-}]).run(['$rootScope', 'esService', function ($rootScope, esService) {
-    $rootScope.$on('newdocfound', function (event, doc) {
-        esService.sendNewDocFoundNotification(doc);
-    });
+}])*/
+    .run(['$rootScope', 'esService', function ($rootScope, esService) {
+        $rootScope.$on('newdocfound', function (event, doc) {
+            esService.sendNewDocFoundNotification(doc);
+        });
 }]);
