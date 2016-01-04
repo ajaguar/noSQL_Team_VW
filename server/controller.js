@@ -11,7 +11,7 @@ module.exports = function (app, esClient, socket) {
         dest: config.uploadDir
     });
 
-    //initIndexIfNotExists();
+    initIndexIfNotExists();
     clearPercolator();
 
     app.post('/document', upload.single('document'), function (req, res) {
