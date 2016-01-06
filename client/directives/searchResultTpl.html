@@ -2,7 +2,7 @@
     <div class="row">
         <span>
             <label class="score btn btn-info">{{hit._score | number:4}}</label>
-        <a class="filename" href="{{hit.link}}">{{hit.fields.title[0]}}</a>
+        <a class="filename" ng-href='document/{{hit._id}}' target='_blank'>{{hit.fields.title[0]}}</a>
         </span>
     </div>
     <div ng-repeat="highlight in hit.highlight.content" class="row"><span class="dots">...</span><span ng-bind-html="highlight | to_trusted"></span><span class="dots">...</span>

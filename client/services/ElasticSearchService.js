@@ -35,10 +35,6 @@ angular.module('esApp.service.ElasticSearch', [
     var sendNewDocFoundNotification = function (doc) {
         var notification = sendNotification('For your search term "' + doc.keyword + '", filename: "' + doc.filename + '"', 'New document found');
         notification.addEventListener('click', function () {
-            /* use $timeout to fix bug reload bug */
-            $timeout(function () {
-                $location.search('keyword', doc.keyword);
-            }, 1);
             $window.focus();
         });
         return notification;

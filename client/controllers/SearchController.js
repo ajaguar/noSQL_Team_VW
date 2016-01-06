@@ -17,7 +17,9 @@ angular.module('esApp.SearchController', [
         var ctrl = this;
 
         $scope.$on('$routeUpdate', function () {
+            alert("ja");
             if ($location.search().keyword && $location.search().keyword != ctrl.keyword) {
+                alert("HI");
                 ctrl.keyword = $location.search().keyword;
                 ctrl.queryKeyword = ctrl.keyword;
                 ctrl.searchKeyword();
@@ -58,5 +60,18 @@ angular.module('esApp.SearchController', [
             $scope.subscription = subscription;
             $scope.$apply();
         });
+
+        $scope.notifications = [];
+        $scope.$on('newdocfound', function (event, doc) {
+            $scope.notifications.push(doc);
+            $scope.$digest();
+        });
+
+        $scope.removeNotification = function (doc) {
+            var position = $scope.notifications.indexOf(doc);
+            if (position > -1) {
+                $scope.notifications.splice(position, 1);
+            }
+        };
 
 }]);

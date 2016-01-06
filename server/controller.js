@@ -58,11 +58,13 @@ module.exports = function (app, esClient, socket) {
                             if (err) {
                                 throw err;
                             }
-                            var socketId = response.fields.socket,
+                            console.log(response.fields);
+                            console.log(createdFileId);
+                            var socketId = response.fields.socket[0],
                                 notificationObject = {
                                     'filename': req.file.originalname,
                                     'fileId': createdFileId,
-                                    'keyword': response.fields.keyword
+                                    'keyword': response.fields.keyword[0]
                                 };
                             socket.emitSocketId(socketId, notificationObject);
                         });
@@ -75,6 +77,26 @@ module.exports = function (app, esClient, socket) {
         });
     });
 
+    app.get('/document/:id', function (req, res) {
+        esClient.get({
+            'id': req.params.id,
+            'index': 'file',
+            'type': 'document',
+            'fields': ['content', 'title']
+        }, function (err, response) {
+            if (err) {
+                res.status(400).send("file could not be found").end();
+            } else {
+                var content = response.fields.content[0],
+                    filename = response.fields.title[0];
+                res.setHeader('Content-Disposition', 'attachment; filename="' + filename + '"');
+                res.write(content);
+                res.end();
+            }
+        });
+    });
+
+    /* document search */
     app.get('/document', function (req, res) {
         if (!req.query.search) {
             res.status(400).send('no search value sent').end();
@@ -126,34 +148,42 @@ module.exports = function (app, esClient, socket) {
     });
 
     function initIndexIfNotExists() {
-        esClient.indices.delete({
+        esClient.indices.exists({
             index: 'file'
-        }, function () {
-            console.log('creating index');
-            esClient.indices.create({
-                index: 'file'
-            }, function () {
-                esClient.indices.putMapping({
-                    'body': {
-                        'properties': {
-                            'title': {
-                                'type': 'string',
-                                'index': 'not_analyzed',
-                                'index_options': 'freqs'
+        }, function (error, exists) {
+            if (!exists) {
+                esClient.indices.delete({
+                    index: 'file'
+                }, function () {
+                    console.log('creating index');
+                    esClient.indices.create({
+                        index: 'file'
+                    }, function () {
+                        esClient.indices.putMapping({
+                            'body': {
+                                'properties': {
+                                    'title': {
+                                        'type': 'string',
+                                        'index': 'not_analyzed',
+                                        'index_options': 'freqs'
+                                    },
+                                    'content': {
+                                        'type': 'string',
+                                    },
+                                    'published_at': {
+                                        'type': 'date'
+                                    }
+                                }
                             },
-                            'content': {
-                                'type': 'string',
-                            },
-                            'published_at': {
-                                'type': 'date'
-                            }
-                        }
-                    },
-                    'index': 'file',
-                    'type': 'document'
+                            'index': 'file',
+                            'type': 'document'
+                        });
+                    });
                 });
-            });
-        });
+            } else {
+                console.log('index file exists and must not be recreated');
+            }
+        })
     }
 
     function clearPercolator() {
