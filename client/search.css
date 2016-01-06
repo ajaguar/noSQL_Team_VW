@@ -31,3 +31,11 @@ em {
 .topmargin {
     margin-top: 10px;
 }
+
+.point {
+    cursor: pointer;
+}
+
+.nopoint {
+    cursor: default;
+}

@@ -4,7 +4,7 @@
             <div class="panel-heading">Subscriptions</div>
             <div class="panel-body">
                 <ol>
-                    <li ng-click="clickAlert(sub)" ng-repeat="sub in subscription">{{sub}}</li>
+                    <li class="point" ng-click="clickAlert(sub)" ng-repeat="sub in subscription">{{sub}}</li>
                 </ol>
             </div>
         </div>
@@ -31,7 +31,7 @@
             <div class="panel-heading">Notifications</div>
             <div class="panel-body">
 
-                <div ng-repeat="doc in notifications" class="alert alert-info alert-dismissible" role="alert" ng-click="clickAlert(doc.keyword)">
+                <div ng-repeat="doc in notifications" class="point alert alert-info alert-dismissible" role="alert" ng-click="clickAlert(doc.keyword)">
                     <button type="button" class="close" aria-label="Close" ng-click='removeNotification(doc)'><span aria-hidden="true">&times;</span></button>
                     New document found: '<a ng-href='document/{{doc.fileId}}' target='_blank'>{{doc.filename}}</a>' for search keyword <em>{{doc.keyword}}</em>
                 </div>
