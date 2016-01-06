@@ -57,8 +57,6 @@ module.exports = function (app, esClient, socket) {
                             if (err) {
                                 throw err;
                             }
-                            console.log(response.fields);
-                            console.log(createdFileId);
                             var socketId = response.fields.socket[0],
                                 notificationObject = {
                                     'filename': req.file.originalname,
