@@ -12,7 +12,6 @@ module.exports = function (app, esClient, socket) {
     });
 
     initIndexIfNotExists();
-    clearPercolator();
 
     app.post('/document', upload.single('document'), function (req, res) {
         var createdFileId = -1;
@@ -178,10 +177,12 @@ module.exports = function (app, esClient, socket) {
                             'index': 'file',
                             'type': 'document'
                         });
+                        clearPercolator();
                     });
                 });
             } else {
                 console.log('index file exists and must not be recreated');
+                clearPercolator();
             }
         })
     }
