@@ -5,6 +5,4 @@
 angular.module('esApp.MainController', [
     'esApp.service.ElasticSearch',
     'ng'
-]).controller('MainController', (['$scope', function ($scope) {
-
-}]));
+]).controller('MainController', (['$scope', function ($scope) {}]));

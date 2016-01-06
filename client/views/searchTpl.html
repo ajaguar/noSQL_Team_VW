@@ -1,27 +1,13 @@
-<div class="row" ng-controller="SearchController">
-    <div class="col-md-3">
-        <h4 ng-if="subscription.length > 0">Your subscriptions:</h4>
-        <ol>
-            <li ng-repeat="sub in subscription">{{sub}}</li>
-        </ol>
-    </div>
-    <div class="col-md-6">
-        <h3>Search Text</h3>
-        <form role="form" ng-submit="searchKeyword()">
-            <div class="row input-group">
-                <input ng-model="keyword" type="text" class="form-control" placeholder="Search for..." keyword-input="keyword" ng-trim="false">
-                <span class="input-group-btn">
+<h3>Search Text</h3>
+<div class="row">
+    <form role="form" ng-submit="searchKeyword()">
+        <div class="row input-group">
+            <input ng-model="keyword" type="text" class="form-control" placeholder="Search for..." keyword-input="keyword" ng-trim="false">
+            <span class="input-group-btn">
         <button class="btn btn-default" type="button" ng-click="searchKeyword()">Go!</button>
       </span>
-            </div>
-        </form>
-        <searchresult ng-repeat="hit in results" class="row" hit="hit">
-        </searchresult>
-    </div>
-    <div class="col-md-3">
-        <h4 ng-if="notifications.length > 0">Your notifications:</h4>
-        <ol>
-            <li ng-repeat="doc in notifications">New document found: '<a ng-href='document/{{doc.fileId}}' target='_blank'>{{doc.filename}}</a>' for search keyword '{{doc.keyword}}' <a href ng-click='removeNotification(doc)'>[close]</a></li>
-        </ol>
-    </div>
+        </div>
+    </form>
+    <searchresult ng-repeat="hit in results" class="row" hit="hit">
+    </searchresult>
 </div>

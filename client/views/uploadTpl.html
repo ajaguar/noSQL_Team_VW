@@ -1,20 +1,18 @@
-<div class="col-md-offset-3 col-md-6" ng-controller="UploadController">
-    <h3>Upload File</h3>
-    <div class="row">
-        <div class="col-md-10">
-            <div class="input-group">
-                <span class="input-group-btn">
-            <div class="fileUpload btn btn-primary">
-                <span>Auswählen</span>
-                <input type="file" file-model="file" class="upload" />
-            </div>
-            </span>
-
-            <input type="text" class="form-control topmargin" ng-model="file.name" disabled>
+<h3>Upload File</h3>
+<div class="row">
+    <div class="col-md-10">
+        <div class="input-group" ng-class="{'has-success': file.success}">
+            <span class="input-group-btn">
+            <div class="fileUpload btn btn-info">
+                <span>choose</span>
+            <input type="file" file-model="file" class="upload" />
         </div>
+        </span>
+
+        <input type="text" class="form-control topmargin" ng-model="file.name" disabled>
     </div>
-    <div class="col-md-2">
-        <button class="btn btn-primary topmargin" ng-click="uploadFile()">upload</button>
-    </div>
+</div>
+<div class="col-md-2">
+    <button class="btn btn-info topmargin" ng-click="uploadFile()">upload</button>
 </div>
 </div>
