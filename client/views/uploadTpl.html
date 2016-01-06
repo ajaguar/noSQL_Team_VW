@@ -1,15 +1,15 @@
 <h3>Upload File</h3>
-<div class="row">
+<div class="row" ng-controller="UploadController">
     <div class="col-md-10">
-        <div class="input-group" ng-class="{'has-success': file.success}">
+        <div class="input-group" ng-class="{'has-success': uFile.success}">
             <span class="input-group-btn">
             <div class="fileUpload btn btn-info">
                 <span>choose</span>
-            <input type="file" file-model="file" class="upload" />
+            <input type="file" file-model="uFile" class="upload" />
         </div>
         </span>
 
-        <input type="text" class="form-control topmargin" ng-model="file.name" disabled>
+        <input type="text" class="form-control topmargin" ng-model="uFile.name" disabled>
     </div>
 </div>
 <div class="col-md-2">

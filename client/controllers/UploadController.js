@@ -42,12 +42,13 @@ angular.module('esApp.UploadController', [
     }])
     .controller('UploadController', ['$scope', 'fileUpload', function ($scope, fileUpload) {
         $scope.uploadFile = function () {
-            var file = $scope.file;
+            var file = $scope.uFile;
             var uploadUrl = '/document';
+            console.log(file);
 
             function callback() {
                 $.notify("upload successfull: " + file.name, "success");
-                $scope.file.success = true;
+                $scope.uFile.success = true;
             };
             fileUpload.uploadFileToUrl(file, uploadUrl, callback);
 
