@@ -1,6 +1,10 @@
 # noSQL_Team_VW
 no SQL Team Joshua Vecsei und Jonas Weber
 
+##elasticsearch config
+
+Add `script.inline: on` to config/elasticsearch.yaml
+
 
 ##Develop start with:
 
