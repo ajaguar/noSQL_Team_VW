@@ -12,11 +12,9 @@ angular.module('esApp.SearchController', [
             return $sce.trustAsHtml(text);
         };
     }])
-    .controller('SearchController', ['$scope', '$http', 'esService', '$location', function ($scope, $http, esService, $location) {
-        var ctrl = this;
-
+    .controller('SearchController', ['$scope', '$http', 'esService', function ($scope, $http, esService) {
         $scope.keyword = '';
-        $scope.results = $scope.results = [];
+        $scope.results = [];
         $scope.searchKeyword = function () {
             if ($scope.keyword !== '') {
                 esService.subscribe($scope.keyword);
@@ -53,6 +51,10 @@ angular.module('esApp.SearchController', [
             if (position > -1) {
                 $scope.notifications.splice(position, 1);
             }
+        };
+        $scope.clickAlert = function (data) {
+            $scope.keyword = data;
+            $scope.searchKeyword();
         };
 
 }]);
