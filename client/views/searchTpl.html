@@ -4,7 +4,7 @@
             <div class="panel-heading">Subscriptions</div>
             <div class="panel-body">
                 <ol>
-                    <li ng-repeat="sub in subscription">{{sub}}</li>
+                    <li ng-click="clickAlert(sub)" ng-repeat="sub in subscription">{{sub}}</li>
                 </ol>
             </div>
         </div>
