@@ -44,7 +44,6 @@ angular.module('esApp.UploadController', [
         $scope.uploadFile = function () {
             var file = $scope.uFile;
             var uploadUrl = '/document';
-            console.log(file);
 
             function callback() {
                 $.notify("upload successfull: " + file.name, "success");

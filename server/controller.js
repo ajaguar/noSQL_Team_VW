@@ -126,12 +126,12 @@ module.exports = function (app, esClient, socket) {
                     'highlight': {
                         'fields': {
                             'content': {
-                                'fragment_size': 15,
-                                'number_of_fragments': 0
+                                'fragment_size': 80,
+                                'number_of_fragments': 100
                             },
                             'title': {
                                 'fragment_size': 0,
-                                'number_of_fragments': 0 
+                                'number_of_fragments': 0
                             }
                         }
                     },
