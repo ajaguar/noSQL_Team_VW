@@ -126,7 +126,7 @@ module.exports = function (app, esClient, socket) {
                     'highlight': {
                         'fields': {
                             'content': {
-                                'fragment_size': 50,
+                                'fragment_size': 15,
                                 'number_of_fragments': 0
                             },
                             'title': {
