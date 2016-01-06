@@ -151,34 +151,29 @@ module.exports = function (app, esClient, socket) {
             index: 'file'
         }, function (error, exists) {
             if (!exists) {
-                esClient.indices.delete({
+                esClient.indices.create({
                     index: 'file'
                 }, function () {
-                    console.log('creating index');
-                    esClient.indices.create({
-                        index: 'file'
-                    }, function () {
-                        esClient.indices.putMapping({
-                            'body': {
-                                'properties': {
-                                    'title': {
-                                        'type': 'string',
-                                        'index': 'not_analyzed',
-                                        'index_options': 'freqs'
-                                    },
-                                    'content': {
-                                        'type': 'string',
-                                    },
-                                    'published_at': {
-                                        'type': 'date'
-                                    }
+                    esClient.indices.putMapping({
+                        'body': {
+                            'properties': {
+                                'title': {
+                                    'type': 'string',
+                                    'index': 'not_analyzed',
+                                    'index_options': 'freqs'
+                                },
+                                'content': {
+                                    'type': 'string',
+                                },
+                                'published_at': {
+                                    'type': 'date'
                                 }
-                            },
-                            'index': 'file',
-                            'type': 'document'
-                        });
-                        clearPercolator();
+                            }
+                        },
+                        'index': 'file',
+                        'type': 'document'
                     });
+                    clearPercolator();
                 });
             } else {
                 console.log('index file exists and must not be recreated');
