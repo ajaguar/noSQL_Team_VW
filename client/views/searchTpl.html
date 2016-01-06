@@ -1,13 +1,15 @@
 <h3>Search Text</h3>
 <div class="row" ng-controller="SearchController">
-    <form role="form" ng-submit="searchKeyword()">
-        <div class="row input-group">
-            <input ng-model="keyword" type="text" class="form-control" placeholder="Search for..." keyword-input="keyword" ng-trim="false">
-            <span class="input-group-btn">
+    <div class="col-md-12">
+        <form role="form" ng-submit="searchKeyword()">
+            <div class="row input-group">
+                <input ng-model="keyword" type="text" class="form-control" placeholder="Search for..." keyword-input="keyword" ng-trim="false">
+                <span class="input-group-btn">
         <button class="btn btn-default" type="button" ng-click="searchKeyword()">Go!</button>
       </span>
-        </div>
-    </form>
-    <searchresult ng-repeat="hit in results" class="row" hit="hit">
-    </searchresult>
+            </div>
+        </form>
+        <searchresult ng-repeat="hit in results" class="row" hit="hit">
+        </searchresult>
+    </div>
 </div>
